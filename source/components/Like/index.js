@@ -92,8 +92,6 @@ export default class Like extends Component {
         const likersList = this._getLikersList();
         const likesDescription = this._getLikesDescription();
 
-        console.log(likersList);
-
         return (
             <section className = { Styles.like }>
                 <span className = { likeStyles } onClick = { this._likePost }>Like</span>

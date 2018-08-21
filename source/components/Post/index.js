@@ -25,14 +25,38 @@ export default class Post extends Component {
         this.props._removePost(this.props.id);
     };
 
+    _getCross = () => {
+        const {
+            firstName,
+            lastName,
+            currentUserFirstName,
+            currentUserLastName,
+        } = this.props;
+
+        return firstName + lastName === currentUserFirstName + currentUserLastName ?
+            <span className = { Styles.cross } onClick = { this._handleRemovePost } /> :
+            null;
+    }
+
     render () {
-        const { comment, created, _likePost, id, likes, avatar, currentUserFirstName, currentUserLastName } = this.props;
+        const {
+            comment,
+            created,
+            _likePost,
+            id,
+            likes,
+            avatar,
+            firstName,
+            lastName,
+        } = this.props;
+
+        const getCross = this._getCross();
 
         return (
             <section className = { Styles.post }>
-                <span className = { Styles.cross } onClick = { this._handleRemovePost } />
+                {getCross}
                 <img src = { avatar } />
-                <a>{`${currentUserFirstName} ${currentUserLastName}`}</a>
+                <a>{`${firstName} ${lastName}`}</a>
                 <time>{moment.unix(created).format('MMMM D h:mm:ss a')}</time>
                 <p>{comment}</p>
                 <Like
