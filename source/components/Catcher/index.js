@@ -1,8 +1,8 @@
 //Core
 import React, { Component } from 'react';
-import { object } from 'prop-types';
 
 // Instruments
+import { object } from 'prop-types';
 import Styles from './styles.m.css';
 
 export default class Catcher extends Component {
@@ -14,8 +14,8 @@ export default class Catcher extends Component {
         error: false,
     };
     componentDidCatch (error, stack) {
-        console.log('error', error);
-        console.log('stack', stack.componentStack);
+        console.log('error:', error);
+        console.log('stacktrace:', stack.componentStack);
 
         this.setState({
             error: true,
@@ -29,9 +29,7 @@ export default class Catcher extends Component {
                     <span> A mysterious error occured! </span>
                 </section>
             );
-
         }
-
         return this.props.children;
     }
 }

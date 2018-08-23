@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { Transition } from 'react-transition-group';
 import { TweenMax } from 'gsap';
-import moment from 'moment';
 
 //Components
 import Catcher from 'components/Catcher';
@@ -34,25 +33,25 @@ export default class Feed extends Component {
         socket.on('create', (postJSON) => {
             const { data: createdPost, meta } = JSON.parse(postJSON);
 
-            if (currentUserFirstName + currentUserlastName !== meta.authorFirstName + meta.authorLastName) {
+            if (`${currentUserFirstName} ${currentUserlastName}` !== `${meta.authorFirstName} ${meta.authorLastName}`) {
                 this.setState(({ posts }) => ({
                     posts: [createdPost, ...posts],
                 }));
             }
         });
 
-        socket.on('remove', (postJSON) => {
-            const { data: removedPost, meta } = JSON.parse(postJSON);
-
-            if (currentUserFirstName + currentUserlastName !== meta.authorFirstName + meta.authorLastName) {
-                this.setState(({ posts }) => ({
-                    posts: posts.filter((post) => post.id === removedPost.id),
-                }));
-            }
-        });
+        // socket.on('remove', (postJSON) => {
+        //     const { data: removedPost, meta } = JSON.parse(postJSON);
+        //     console.log(meta);
+        //     if (`${currentUserFirstName} ${currentUserlastName}` !== `${meta.authorFirstName} ${meta.authorLastName}`) {
+        //         this.setState(({ posts }) => ({
+        //             posts: posts.filter((post) => post.id !== removedPost.id),
+        //         }));
+        //     }
+        // });
 
         //
-        // socket.on('liked', (postJSON) => {
+        // socket.on('like', (postJSON) => {
         //     const { data: likedPost, meta } = JSON.parse(postJSON);
         //     console.log('like', JSON.parse(postJSON));
         //     if (currentUserFirstName + currentUserlastName !== meta.authorFirstName + meta.authorLastName) {
@@ -65,7 +64,7 @@ export default class Feed extends Component {
 
     componentWillUnmount () {
         socket.removeListener('create');
-        socket.removeListener('remove');
+        // socket.removeListener('remove');
     }
 
     _likePost = async (id) => {
