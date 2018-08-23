@@ -2,9 +2,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-// Components
-import { Consumer } from 'components/HOC/withProfile';
-
 // Instruments
 import Styles from './styles.m.css';
 import { withProfile } from '../HOC/withProfile';
@@ -27,7 +24,6 @@ export default class Composer extends Component {
 
     _handleFormSubmit = (event) => {
         event.preventDefault();
-        console.log('event', event);
         this._submitComment();
     };
 

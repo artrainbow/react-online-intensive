@@ -1,5 +1,7 @@
 //Core
 import React, { Component } from 'react';
+import { Transition } from 'react-transition-group';
+import { TweenMax } from 'gsap';
 import moment from 'moment';
 
 //Components
@@ -13,16 +15,10 @@ import { withProfile } from '../HOC/withProfile';
 // Instruments
 import Styles from './styles.m.css';
 import { api, TOKEN, GROUP_ID } from 'config/api';
-import { socket, socketTest } from '../../socket/init';
+import { socket } from '../../socket/init';
 
 @withProfile
 export default class Feed extends Component {
-
-    constructor () {
-        super();
-
-        this._setPostsFetchingState.bind(this);
-    }
 
     state = {
         posts:           [],
@@ -33,7 +29,6 @@ export default class Feed extends Component {
         const { currentUserFirstName, currentUserlastName } = this.props;
 
         this._fetchPosts();
-        // this.refetch = setInterval(this._fetchPosts, 1000);
         socket.emit('join', GROUP_ID);
 
         socket.on('create', (postJSON) => {
@@ -55,6 +50,17 @@ export default class Feed extends Component {
                 }));
             }
         });
+
+        //
+        // socket.on('liked', (postJSON) => {
+        //     const { data: likedPost, meta } = JSON.parse(postJSON);
+        //     console.log('like', JSON.parse(postJSON));
+        //     if (currentUserFirstName + currentUserlastName !== meta.authorFirstName + meta.authorLastName) {
+        //         this.setState(({ posts }) => ({
+        //             posts: posts.map((post) => post.id === likedPost.id ? likedPost : post),
+        //         }));
+        //     }
+        // });
     }
 
     componentWillUnmount () {
@@ -83,7 +89,7 @@ export default class Feed extends Component {
         }));
     };
 
-    _setPostsFetchingState (state) {
+    _setPostsFetchingState = (state) => {
         this.setState({
             isPostsFetching: state,
         });
@@ -97,8 +103,6 @@ export default class Feed extends Component {
         });
 
         const { data: posts } = await response.json();
-
-        console.log('POSTS', posts);
 
         this.setState({
             posts,
@@ -143,10 +147,12 @@ export default class Feed extends Component {
         }));
     }
 
+    _animateComposeEnter = (composer) =>{
+        console.log(composer);
+    }
+
     render () {
         const { posts, isPostsFetching } = this.state;
-
-        console.log('render posts', posts);
 
         const postsJSX = posts.map((post) => {
             return (
@@ -164,7 +170,13 @@ export default class Feed extends Component {
             <section className = { Styles.feed }>
                 <Spinner isSpinning = { isPostsFetching } />
                 <StatusBar />
-                <Composer _createPost = { this._createPost } />
+                <Transition
+                    appear
+                    in
+                    timeout = { 1000 }
+                    onEnter = { this._animateComposeEnter }>
+                    <Composer _createPost = { this._createPost } />
+                </Transition>
                 {postsJSX}
             </section>
         );
