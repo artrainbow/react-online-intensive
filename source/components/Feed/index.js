@@ -18,7 +18,6 @@ import { socket } from '../../socket/init';
 
 @withProfile
 export default class Feed extends Component {
-
     state = {
         posts:           [],
         isPostsFetching: false,
@@ -33,38 +32,42 @@ export default class Feed extends Component {
         socket.on('create', (postJSON) => {
             const { data: createdPost, meta } = JSON.parse(postJSON);
 
-            if (`${currentUserFirstName} ${currentUserlastName}` !== `${meta.authorFirstName} ${meta.authorLastName}`) {
+            if (`${currentUserFirstName} ${currentUserlastName}` !==
+                `${meta.authorFirstName} ${meta.authorLastName}`) {
                 this.setState(({ posts }) => ({
                     posts: [createdPost, ...posts],
+                    isPostsFetching: false,
                 }));
             }
         });
 
-        // socket.on('remove', (postJSON) => {
-        //     const { data: removedPost, meta } = JSON.parse(postJSON);
-        //     console.log(meta);
-        //     if (`${currentUserFirstName} ${currentUserlastName}` !== `${meta.authorFirstName} ${meta.authorLastName}`) {
-        //         this.setState(({ posts }) => ({
-        //             posts: posts.filter((post) => post.id !== removedPost.id),
-        //         }));
-        //     }
-        // });
+        socket.on('remove', (postJSON) => {
+            const { data: removedPost, meta } = JSON.parse(postJSON);
 
-        //
-        // socket.on('like', (postJSON) => {
-        //     const { data: likedPost, meta } = JSON.parse(postJSON);
-        //     console.log('like', JSON.parse(postJSON));
-        //     if (currentUserFirstName + currentUserlastName !== meta.authorFirstName + meta.authorLastName) {
-        //         this.setState(({ posts }) => ({
-        //             posts: posts.map((post) => post.id === likedPost.id ? likedPost : post),
-        //         }));
-        //     }
-        // });
+            if (`${currentUserFirstName} ${currentUserlastName}` !==
+                `${meta.authorFirstName} ${meta.authorLastName}`) {
+                this.setState(({ posts }) => ({
+                    posts: posts.filter((post) => post.id !== removedPost.id),
+                }));
+            }
+        });
+
+        socket.on('like', (postJSON) => {
+            const { data: likedPost, meta } = JSON.parse(postJSON);
+
+            if (`${currentUserFirstName} ${currentUserlastName}` !==
+                `${meta.authorFirstName} ${meta.authorLastName}`) {
+                this.setState(({ posts }) => ({
+                    posts: posts.map((post) => post.id === likedPost.id ? likedPost : post),
+                }));
+            }
+        });
     }
 
     componentWillUnmount () {
         socket.removeListener('create');
-        // socket.removeListener('remove');
+        socket.removeListener('remove');
+        socket.removeListener('like');
     }
 
     _likePost = async (id) => {
@@ -124,10 +127,10 @@ export default class Feed extends Component {
 
         const { data: post } = await response.json();
 
-        this.setState(({ posts }) => ({
-            posts:           [post, ...posts],
-            isPostsFetching: false,
-        }));
+        // this.setState(({ posts }) => ({
+        //     posts:           [post, ...posts],
+        //     isPostsFetching: false,
+        // }));
     };
 
     _removePost = async (id) => {
@@ -146,7 +149,7 @@ export default class Feed extends Component {
         }));
     }
 
-    _animateComposeEnter = (composer) =>{
+    _animateComposeEnter = (composer) => {
         console.log(composer);
     }
 
