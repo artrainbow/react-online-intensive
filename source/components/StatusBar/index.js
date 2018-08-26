@@ -1,5 +1,7 @@
 //Core
 import React, { Component } from 'react';
+import { Transition } from 'react-transition-group';
+import { fromTo, to, from, set } from 'gsap';
 
 // Components
 
@@ -36,6 +38,10 @@ export default class StatusBar extends Component {
         socket.removeListener('disconnect');
     }
 
+    _animateStatusBarEnter = (statusBar) => {
+        fromTo(statusBar, 1, { opacity: 0, y: -50 }, { opacity: 1, y: 0 });
+    }
+
     render () {
 
         const { avatar, currentUserFirstName, currentUserLastName } = this.props;
@@ -49,18 +55,24 @@ export default class StatusBar extends Component {
         const statusMessage = online ? 'Online' : 'Offline';
 
         return (
-            <section className = { Styles.statusBar }>
-                <div className = { statusStyle }>
-                    <div>{statusMessage}</div>
-                    <span />
-                </div>
-                <button>
-                    <img src = { avatar } />
-                    <span>{currentUserFirstName}</span>
-                    &nbsp;
-                    <span>{currentUserLastName}</span>
-                </button>
-            </section>
+            <Transition
+                appear
+                in
+                timeout = { 1000 }
+                onEnter = { this._animateStatusBarEnter }>
+                <section className = { Styles.statusBar }>
+                    <div className = { statusStyle }>
+                        <div>{statusMessage}</div>
+                        <span />
+                    </div>
+                    <button>
+                        <img src = { avatar } />
+                        <span>{currentUserFirstName}</span>
+                        &nbsp;
+                        <span>{currentUserLastName}</span>
+                    </button>
+                </section>
+            </Transition>
         );
     }
 }

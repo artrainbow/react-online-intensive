@@ -1,7 +1,7 @@
 //Core
 import React, { Component } from 'react';
 import { Transition } from 'react-transition-group';
-import { TweenMax } from 'gsap';
+import { TimelineMax, fromTo, to, from, set } from 'gsap';
 
 //Components
 import Catcher from 'components/Catcher';
@@ -9,6 +9,7 @@ import StatusBar from 'components/StatusBar';
 import Composer from 'components/Composer';
 import Post from 'components/Post';
 import Spinner from 'components/Spinner';
+import Postman from 'components/Postman';
 import { withProfile } from '../HOC/withProfile';
 
 // Instruments
@@ -35,7 +36,7 @@ export default class Feed extends Component {
             if (`${currentUserFirstName} ${currentUserlastName}` !==
                 `${meta.authorFirstName} ${meta.authorLastName}`) {
                 this.setState(({ posts }) => ({
-                    posts: [createdPost, ...posts],
+                    posts:           [createdPost, ...posts],
                     isPostsFetching: false,
                 }));
             }
@@ -149,8 +150,18 @@ export default class Feed extends Component {
         }));
     }
 
-    _animateComposeEnter = (composer) => {
-        console.log(composer);
+    _animateComposeEnter = (composer) => { // В качестве аргумента корневой DOM элемент компонента
+        // to(composer, 2, {opacity: 0});
+        fromTo(composer, 1, { opacity: 0 }, { opacity: 1 });
+    }
+
+    _animationPostmanEnter = (postman) => {
+        const Tl = new TimelineMax();
+
+        Tl
+            .fromTo(postman, 1, { delay: 1, x: 300, ease: Power2.easeOut }, { x: 0, ease: Power2.easeOut })
+            .to(postman, 1, { delay: 4, x: 300, ease: Power2.easeOut });
+
     }
 
     render () {
@@ -175,10 +186,20 @@ export default class Feed extends Component {
                 <Transition
                     appear
                     in
-                    timeout = { 1000 }
-                    onEnter = { this._animateComposeEnter }>
+                    onEnter = { this._animateComposeEnter }
+                    //  onEntered = { () => console.log('onEntered') } // сработает через время timeout
+                    //  onEntering = { () => console.log('onEntering') }
+                    timeout = { 1000 }>
                     <Composer _createPost = { this._createPost } />
                 </Transition>
+                <Transition
+                    appear
+                    in
+                    onEnter = { this._animationPostmanEnter }
+                    timeout = { 1000 }>
+                    <Postman />
+                </Transition>
+
                 {postsJSX}
             </section>
         );
