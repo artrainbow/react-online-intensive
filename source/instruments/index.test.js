@@ -27,7 +27,36 @@ describe('Instruments', () => {
         await expect(delay()).resolves.toBeUndefined();
     });
 
-    test('getUniqueID must be a function.', () => {
+    test('getUniqueID must be a function', () => {
         expect(getUniqueID).toBeInstanceOf(Function);
+    });
+
+    test('getUniqueID should return exception if some argument not a number', () => {
+        expect(() => getUniqueID('hello')).toThrow();
+        expect(() => getUniqueID(true)).toThrow();
+        expect(() => getUniqueID(null)).toThrow();
+    });
+
+    test('getUniqueID should return string', () => {
+        expect(typeof getUniqueID(3)).toBe('string');
+    });
+
+    test('getUniqueID should return string with length equals args length', () => {
+        expect(getUniqueID(3).length).toBe(3);
+        expect(getUniqueID(12)).toHaveLength(12);
+    });
+
+    test('getFullApiUrl must be a function', () => {
+        expect(getFullApiUrl).toBeInstanceOf(Function);
+    });
+
+    test('getFullApiUrl should takes 2 arguments and return exception if some argument not a string', () => {
+        expect(()=> getFullApiUrl(777, 'test')).toThrow();
+        expect(()=> getFullApiUrl('test')).toThrow();
+        expect(()=> getFullApiUrl(777)).toThrow();
+    });
+
+    test('getFullApiUrl should return string', () => {
+        expect(typeof getFullApiUrl('test', 'test')).toBe('string');
     });
 });

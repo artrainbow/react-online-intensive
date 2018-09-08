@@ -11,6 +11,7 @@ import Post from 'components/Post';
 import Spinner from 'components/Spinner';
 import Postman from 'components/Postman';
 import { withProfile } from '../HOC/withProfile';
+import Counter from 'components/Counter';
 
 // Instruments
 import Styles from './styles.m.css';
@@ -212,6 +213,7 @@ export default class Feed extends Component {
                     timeout = { 1000 }>
                     <Postman />
                 </Transition>
+                <Counter count = { postsJSX.length } />
                 <TransitionGroup>
                     {postsJSX}
                 </TransitionGroup>
