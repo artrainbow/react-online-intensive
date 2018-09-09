@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Transition } from 'react-transition-group';
 import { fromTo, to, from, set } from 'gsap';
+import { Link } from 'react-router-dom';
 
 // Components
 
@@ -44,7 +45,7 @@ export default class StatusBar extends Component {
 
     render () {
 
-        const { avatar, currentUserFirstName, currentUserLastName } = this.props;
+        const { avatar, currentUserFirstName } = this.props;
         const { online } = this.state;
 
         const statusStyle = cx(Styles.status, {
@@ -65,12 +66,12 @@ export default class StatusBar extends Component {
                         <div>{statusMessage}</div>
                         <span />
                     </div>
-                    <button>
+                    <Link to = '/profile'>
                         <img src = { avatar } />
                         <span>{currentUserFirstName}</span>
-                        &nbsp;
-                        <span>{currentUserLastName}</span>
-                    </button>
+                    </Link>
+
+                    <Link to = '/feed'>Feed</Link>
                 </section>
             </Transition>
         );

@@ -5,7 +5,6 @@ import { TimelineMax, fromTo, to, from, set } from 'gsap';
 
 //Components
 import Catcher from 'components/Catcher';
-import StatusBar from 'components/StatusBar';
 import Composer from 'components/Composer';
 import Post from 'components/Post';
 import Spinner from 'components/Spinner';
@@ -196,7 +195,6 @@ export default class Feed extends Component {
         return (
             <section className = { Styles.feed }>
                 <Spinner isSpinning = { isPostsFetching } />
-                <StatusBar />
                 <Transition
                     appear
                     in
